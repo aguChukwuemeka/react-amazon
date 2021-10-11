@@ -2,7 +2,7 @@ import React from "react";
 import { useStateValue } from "../contexts/stateProvider";
 
 export default function Products({ id, title, image, price, rating }) {
-  const [, dispatch] = useStateValue();
+  const [{user}, dispatch] = useStateValue();
   const addToBasket = () => {
     dispatch({
       type: "ADD_TO_BASKET",
@@ -27,12 +27,14 @@ export default function Products({ id, title, image, price, rating }) {
           {Array(rating)
             .fill()
             .map((_, index) => (
-              <p key={index}>🌟</p>
+              <span key={index} role="img">
+                ⭐
+              </span>
             ))}
         </div>
       </div>
       <img className="p-3" src={image} alt="" />
-      <button className="px-2" onClick={addToBasket}>
+      <button className={`px-3 ${!user && 'btn disabled rounded-0' }`} onClick={addToBasket}>
         Add to Basket
       </button>
     </div>

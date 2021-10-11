@@ -4,10 +4,18 @@ import { Link } from "react-router-dom";
 import { BiSearchAlt } from "react-icons/bi";
 import { FaCartPlus } from "react-icons/fa";
 import { useStateValue } from "../contexts/stateProvider";
+import { auth } from "../services/auth";
 
 export default function Navbar() {
-  const [{ basket }] = useStateValue();
-  console.log('🧺', basket);
+  const [{ basket, user }] = useStateValue();
+  // console.log('🍦', basket);
+
+  const login = () => {
+    if (user) {
+      auth.signOut();
+    }
+  };
+
   return (
     <nav className="nav p-2">
       <Link to="/">
@@ -18,10 +26,14 @@ export default function Navbar() {
         <BiSearchAlt className="search__icon" />
       </div>
       <div className="nav__links">
-        <Link to="/signIn" className="links__bar">
-          <div className="links___option">
-            <span className="header__option__one">Hello Orton</span>
-            <span className="header__option__two">Sign In</span>
+        <Link to={!user && "/login"} className="links__bar">
+          <div onClick={login} className="links___option">
+            <span className="header__option__one">
+              Hello {!user ? "Guest" : user.email}
+            </span>
+            <span className="header__option__two">
+              {user ? "Sign Out" : "Sign In"}
+            </span>
           </div>
         </Link>
 
@@ -43,7 +55,7 @@ export default function Navbar() {
           <div className="links___option__basket">
             <FaCartPlus />
             <span className="header__option__two mx-3 basket__count">
-              {basket?.length}
+              {basket.length}
             </span>
           </div>
         </Link>

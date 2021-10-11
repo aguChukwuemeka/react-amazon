@@ -1,18 +1,72 @@
+import React, { useEffect } from "react";
 import "./App.css";
-import Navbar from "./components/navbar";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "./pages/login";
-import ProductList from "./pages/productlist";
 import Checkout from "./pages/checkout";
+import ProductList from "./pages/productlist";
+// import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useStateValue } from "./contexts/stateProvider";
+import Navbar from "./components/navbar";
+import { app } from "./services/firebase";
 
 function App() {
+  // const auth = getAuth();
+  const auth = app.auth();
+  const [{user}, dispatch] = useStateValue();
+  // useEffect(() => {
+  //   onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       dispatch({
+  //         type: "SET_USER",
+  //         user,
+  //       });
+  //     } else {
+  //       dispatch({
+  //         type: "SET_USER",
+  //         user: null,
+  //       });
+  //     }
+  //   });
+  //   // return () => {
+  //   //   unsubscribe();
+  //   // };
+  // }, []);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        dispatch({
+          type: "SET_USER",
+          user,
+        });
+      } else {
+        dispatch({
+          type: "SET_USER",
+          user: null,
+        });
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+console.log(user);
+
   return (
     <Router>
-      <Navbar />
       <Switch>
-        <Route exact path="/" component={ProductList} />
-        <Route path="/login" component={Login} />
-        <Route path="/checkout" component={Checkout} />
+        <Route exact path="/">
+          <Navbar />
+          <ProductList />
+        </Route>
+        <Route exact path="/login">
+          <Login />
+        </Route>
+        <Route exact path="/checkout">
+          <Navbar />
+          <Checkout />
+        </Route>
       </Switch>
     </Router>
   );

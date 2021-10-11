@@ -24,7 +24,9 @@ export default function CheckOutProducts({ id, title, image, price, rating }) {
             {Array(rating)
               .fill()
               .map((_, index) => (
-                <p key={index}>🌟</p>
+                <span key={index} role="img">
+                  🌟
+                </span>
               ))}
           </div>
           <button className="px-2 me-3" onClick={handleRemoveItem}>
@@ -35,7 +37,6 @@ export default function CheckOutProducts({ id, title, image, price, rating }) {
           </Link>
         </div>
       </div>
-      
     </div>
   );
 }
